@@ -11,6 +11,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors, Spacing, BorderRadius, Typography, Shadows } from '../../../constants/theme';
 
 const ProfileScreen: React.FC = () => {
   const router = useRouter();
@@ -33,15 +34,19 @@ const ProfileScreen: React.FC = () => {
     icon,
     title,
     onPress,
+    showArrow = true,
   }: {
     icon: React.ReactNode;
     title: string;
     onPress: () => void;
+    showArrow?: boolean;
   }) => (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
-      <Text style={styles.menuIcon}>{icon}</Text>
+      <View style={styles.menuIconContainer}>
+        {icon}
+      </View>
       <Text style={styles.menuTitle}>{title}</Text>
-      <Text style={styles.menuArrow}>›</Text>
+      {showArrow && <Ionicons name="chevron-forward" size={18} color={Colors.light.iconSecondary} />}
     </TouchableOpacity>
   );
 
@@ -64,12 +69,12 @@ const ProfileScreen: React.FC = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>My Account</Text>
         <MenuItem
-          icon={<Ionicons name="cube-outline" size={20} color="#333" />}
+          icon={<Ionicons name="receipt-outline" size={20} color={Colors.light.primary} />}
           title="My Orders"
           onPress={() => router.push('/orders')}
         />
         <MenuItem
-          icon={<Ionicons name="cart-outline" size={20} color="#333" />}
+          icon={<Ionicons name="cart-outline" size={20} color={Colors.light.primary} />}
           title="My Cart"
           onPress={() => router.push('/cart')}
         />
@@ -78,17 +83,17 @@ const ProfileScreen: React.FC = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Settings</Text>
         <MenuItem
-          icon={<Ionicons name="notifications-outline" size={20} color="#333" />}
+          icon={<Ionicons name="notifications-outline" size={20} color={Colors.light.primary} />}
           title="Notifications"
           onPress={() => Alert.alert('Coming Soon', 'Notifications settings')}
         />
         <MenuItem
-          icon={<Ionicons name="lock-closed-outline" size={20} color="#333" />}
+          icon={<Ionicons name="lock-closed-outline" size={20} color={Colors.light.primary} />}
           title="Privacy & Security"
           onPress={() => Alert.alert('Coming Soon', 'Privacy settings')}
         />
         <MenuItem
-          icon={<Ionicons name="help-circle-outline" size={20} color="#333" />}
+          icon={<Ionicons name="help-circle-outline" size={20} color={Colors.light.primary} />}
           title="Help & Support"
           onPress={() => Alert.alert('Coming Soon', 'Help center')}
         />
@@ -100,9 +105,12 @@ const ProfileScreen: React.FC = () => {
         disabled={isLoggingOut}
       >
         {isLoggingOut ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color={Colors.light.error} />
         ) : (
-          <Text style={styles.logoutText}>Logout</Text>
+          <>
+            <Ionicons name="log-out-outline" size={20} color={Colors.light.error} style={styles.logoutIcon} />
+            <Text style={styles.logoutText}>Logout</Text>
+          </>
         )}
       </TouchableOpacity>
 
@@ -116,95 +124,106 @@ const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.light.background,
   },
   header: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.surface,
     alignItems: 'center',
-    padding: 30,
-    marginBottom: 20,
+    paddingVertical: Spacing.xl,
+    marginBottom: Spacing.md,
+    ...Shadows.sm,
   },
   avatarContainer: {
     width: 80,
     height: 80,
-    borderRadius: 40,
-    backgroundColor: '#007AFF',
+    borderRadius: BorderRadius.full,
+    backgroundColor: Colors.light.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: Spacing.md,
   },
   avatarText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontSize: Typography.xxxl,
+    fontWeight: Typography.bold,
+    color: Colors.light.textInverse,
   },
   userName: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
+    fontSize: Typography.xl,
+    fontWeight: Typography.semibold,
+    color: Colors.light.text,
+    marginBottom: Spacing.xs,
   },
   userEmail: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
   },
   section: {
-    backgroundColor: '#fff',
-    marginBottom: 20,
+    backgroundColor: Colors.light.surface,
+    marginBottom: Spacing.md,
+    ...Shadows.sm,
   },
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    padding: 15,
-    paddingBottom: 10,
+    fontSize: Typography.xs,
+    fontWeight: Typography.semibold,
+    color: Colors.light.textSecondary,
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.sm,
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: Colors.light.borderLight,
   },
-  menuIcon: {
-    fontSize: 20,
-    marginRight: 15,
+  menuIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: BorderRadius.md,
+    backgroundColor: Colors.light.backgroundTertiary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: Spacing.md,
   },
   menuTitle: {
     flex: 1,
-    fontSize: 16,
-    color: '#333',
-  },
-  menuArrow: {
-    fontSize: 20,
-    color: '#ccc',
+    fontSize: Typography.md,
+    color: Colors.light.text,
   },
   logoutButton: {
-    backgroundColor: '#fff',
-    marginHorizontal: 15,
-    marginBottom: 20,
-    padding: 15,
-    borderRadius: 12,
+    backgroundColor: Colors.light.surface,
+    marginHorizontal: Spacing.md,
+    marginBottom: Spacing.md,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.lg,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    ...Shadows.sm,
   },
   logoutButtonDisabled: {
     opacity: 0.6,
   },
+  logoutIcon: {
+    marginRight: Spacing.sm,
+  },
   logoutText: {
-    color: '#f44336',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.error,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
   footer: {
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 40,
+    padding: Spacing.xl,
+    paddingBottom: Spacing.xxl,
   },
   versionText: {
-    fontSize: 14,
-    color: '#999',
+    fontSize: Typography.sm,
+    color: Colors.light.textTertiary,
   },
 });
 

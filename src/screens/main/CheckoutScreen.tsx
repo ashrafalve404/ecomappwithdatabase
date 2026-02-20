@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { cartAPI, ordersAPI } from '../../api';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors, Spacing, BorderRadius, Typography, Shadows } from '../../../constants/theme';
 
 interface CartItem {
   id: number;
@@ -96,7 +98,7 @@ const CheckoutScreen: React.FC = () => {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={Colors.light.primary} />
       </View>
     );
   }
@@ -104,6 +106,7 @@ const CheckoutScreen: React.FC = () => {
   if (error) {
     return (
       <View style={styles.errorContainer}>
+        <Ionicons name="alert-circle-outline" size={48} color={Colors.light.error} />
         <Text style={styles.errorText}>{error}</Text>
       </View>
     );
@@ -112,6 +115,7 @@ const CheckoutScreen: React.FC = () => {
   if (cartItems.length === 0) {
     return (
       <View style={styles.errorContainer}>
+        <Ionicons name="cart-outline" size={48} color={Colors.light.iconSecondary} />
         <Text style={styles.errorText}>Your cart is empty</Text>
         <TouchableOpacity
           style={styles.shopButton}
@@ -136,7 +140,7 @@ const CheckoutScreen: React.FC = () => {
             value={shippingAddress}
             onChangeText={setShippingAddress}
             placeholder="Enter your full shipping address"
-            placeholderTextColor="#999"
+            placeholderTextColor={Colors.light.placeholder}
             multiline
             numberOfLines={3}
             textAlignVertical="top"
@@ -163,6 +167,7 @@ const CheckoutScreen: React.FC = () => {
                   <View style={styles.radioInner} />
                 )}
               </View>
+              <Ionicons name="cash-outline" size={20} color={Colors.light.textSecondary} style={styles.paymentIcon} />
               <Text style={styles.paymentText}>Cash on Delivery</Text>
             </View>
           </TouchableOpacity>
@@ -183,6 +188,7 @@ const CheckoutScreen: React.FC = () => {
               >
                 {paymentMethod === 'card' && <View style={styles.radioInner} />}
               </View>
+              <Ionicons name="card-outline" size={20} color={Colors.light.textSecondary} style={styles.paymentIcon} />
               <Text style={styles.paymentText}>Credit/Debit Card</Text>
             </View>
           </TouchableOpacity>
@@ -209,8 +215,11 @@ const CheckoutScreen: React.FC = () => {
           </View>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Shipping</Text>
-            <Text style={styles.totalValue}>
-              {shippingCost === 0 ? 'Free' : `$${shippingCost.toFixed(2)}`}
+            <Text style={[
+              styles.totalValue,
+              shippingCost === 0 && styles.freeShipping
+            ]}>
+              {shippingCost === 0 ? 'Free' : `${shippingCost.toFixed(2)}`}
             </Text>
           </View>
           <View style={styles.totalRow}>
@@ -231,9 +240,12 @@ const CheckoutScreen: React.FC = () => {
           disabled={isPlacingOrder}
         >
           {isPlacingOrder ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={Colors.light.textInverse} />
           ) : (
-            <Text style={styles.placeOrderText}>Place Order</Text>
+            <>
+              <Text style={styles.placeOrderText}>Place Order</Text>
+              <Ionicons name="arrow-forward" size={18} color={Colors.light.textInverse} />
+            </>
           )}
         </TouchableOpacity>
       </View>
@@ -244,7 +256,7 @@ const CheckoutScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.light.background,
   },
   loadingContainer: {
     flex: 1,
@@ -255,61 +267,63 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: Spacing.xl,
   },
   errorText: {
-    color: '#c62828',
-    fontSize: 16,
+    color: Colors.light.error,
+    fontSize: Typography.md,
     textAlign: 'center',
-    marginBottom: 15,
+    marginTop: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   shopButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm + 2,
+    borderRadius: BorderRadius.md,
   },
   shopButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
   scrollContent: {
-    padding: 20,
-    paddingBottom: 120,
+    padding: Spacing.md,
+    paddingBottom: 140,
   },
   section: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
+    backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    marginBottom: Spacing.md,
+    ...Shadows.sm,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 15,
+    fontSize: Typography.lg,
+    fontWeight: Typography.semibold,
+    color: Colors.light.text,
+    marginBottom: Spacing.md,
   },
   addressInput: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    padding: 15,
-    fontSize: 16,
-    color: '#333',
+    backgroundColor: Colors.light.backgroundTertiary,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.md,
+    fontSize: Typography.md,
+    color: Colors.light.text,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: Colors.light.border,
     minHeight: 100,
   },
   paymentOption: {
-    padding: 15,
-    borderRadius: 8,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    marginBottom: 10,
+    borderColor: Colors.light.border,
+    marginBottom: Spacing.sm,
   },
   paymentOptionSelected: {
-    borderColor: '#007AFF',
-    backgroundColor: '#e3f2fd',
+    borderColor: Colors.light.primary,
+    backgroundColor: `${Colors.light.primary}10`,
   },
   radioContainer: {
     flexDirection: 'row',
@@ -320,98 +334,110 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#ccc',
-    marginRight: 10,
+    borderColor: Colors.light.border,
+    marginRight: Spacing.sm,
     justifyContent: 'center',
     alignItems: 'center',
   },
   radioSelected: {
-    borderColor: '#007AFF',
+    borderColor: Colors.light.primary,
   },
   radioInner: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#007AFF',
+    backgroundColor: Colors.light.primary,
+  },
+  paymentIcon: {
+    marginRight: Spacing.sm,
   },
   paymentText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: Typography.md,
+    color: Colors.light.text,
   },
   summaryItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: Spacing.sm,
   },
   itemName: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
     flex: 1,
-    marginRight: 10,
+    marginRight: Spacing.sm,
   },
   itemPrice: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '600',
+    fontSize: Typography.sm,
+    color: Colors.light.text,
+    fontWeight: Typography.medium,
   },
   totalsSection: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 15,
+    backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    ...Shadows.sm,
   },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: Spacing.sm,
   },
   totalLabel: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
   },
   totalValue: {
-    fontSize: 14,
-    color: '#333',
+    fontSize: Typography.sm,
+    color: Colors.light.text,
+  },
+  freeShipping: {
+    color: Colors.light.success,
+    fontWeight: Typography.medium,
   },
   grandTotal: {
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    paddingTop: 10,
-    marginTop: 5,
+    borderTopColor: Colors.light.border,
+    paddingTop: Spacing.sm,
+    marginTop: Spacing.xs,
     marginBottom: 0,
   },
   grandTotalLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.lg,
+    fontWeight: Typography.bold,
+    color: Colors.light.text,
   },
   grandTotalValue: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#007AFF',
+    fontSize: Typography.xl,
+    fontWeight: Typography.bold,
+    color: Colors.light.primary,
   },
   footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#fff',
-    padding: 20,
+    backgroundColor: Colors.light.surface,
+    padding: Spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: Colors.light.borderLight,
+    ...Shadows.md,
   },
   placeOrderButton: {
-    backgroundColor: '#007AFF',
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonDisabled: {
-    backgroundColor: '#b3d4fc',
+    opacity: 0.6,
   },
   placeOrderText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.lg,
+    fontWeight: Typography.semibold,
+    marginRight: Spacing.sm,
   },
 });
 

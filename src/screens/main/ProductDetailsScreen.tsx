@@ -12,6 +12,7 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { productsAPI, cartAPI } from '../../api';
+import { Colors, Spacing, BorderRadius, Typography, Shadows } from '../../../constants/theme';
 
 interface Product {
   id: number;
@@ -73,7 +74,7 @@ const ProductDetailsScreen: React.FC = () => {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={Colors.light.primary} />
       </View>
     );
   }
@@ -81,6 +82,7 @@ const ProductDetailsScreen: React.FC = () => {
   if (error || !product) {
     return (
       <View style={styles.errorContainer}>
+        <Ionicons name="alert-circle-outline" size={48} color={Colors.light.error} />
         <Text style={styles.errorText}>{error || 'Product not found'}</Text>
         <TouchableOpacity
           style={styles.retryButton}
@@ -100,14 +102,16 @@ const ProductDetailsScreen: React.FC = () => {
             <Image source={{ uri: product.image }} style={styles.productImage} />
           ) : (
             <View style={styles.placeholderImage}>
-              <Ionicons name="cube-outline" size={30} color="#999" />
+              <Ionicons name="image-outline" size={48} color={Colors.light.iconSecondary} />
             </View>
           )}
         </View>
 
         <View style={styles.content}>
           {product.category && (
-            <Text style={styles.category}>{product.category}</Text>
+            <View style={styles.categoryContainer}>
+              <Text style={styles.category}>{product.category}</Text>
+            </View>
           )}
           <Text style={styles.productName}>{product.name}</Text>
           <Text style={styles.price}>${product.price}</Text>
@@ -142,6 +146,7 @@ const ProductDetailsScreen: React.FC = () => {
 
       <View style={styles.footer}>
         <View style={styles.priceContainer}>
+          <Text style={styles.footerPriceLabel}>Price</Text>
           <Text style={styles.footerPrice}>${product.price}</Text>
         </View>
         <TouchableOpacity
@@ -153,9 +158,12 @@ const ProductDetailsScreen: React.FC = () => {
           disabled={isAddingToCart}
         >
           {isAddingToCart ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={Colors.light.textInverse} />
           ) : (
-            <Text style={styles.addToCartText}>Add to Cart</Text>
+            <>
+              <Ionicons name="cart-outline" size={18} color={Colors.light.textInverse} style={styles.cartIcon} />
+              <Text style={styles.addToCartText}>Add to Cart</Text>
+            </>
           )}
         </TouchableOpacity>
       </View>
@@ -166,7 +174,7 @@ const ProductDetailsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.background,
   },
   loadingContainer: {
     flex: 1,
@@ -177,29 +185,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: Spacing.xl,
   },
   errorText: {
-    color: '#c62828',
-    fontSize: 16,
+    color: Colors.light.error,
+    fontSize: Typography.md,
     textAlign: 'center',
-    marginBottom: 15,
+    marginTop: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   retryButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm + 2,
+    borderRadius: BorderRadius.md,
   },
   retryText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
   imageContainer: {
     width: '100%',
     aspectRatio: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: Colors.light.backgroundTertiary,
   },
   productImage: {
     width: '100%',
@@ -212,103 +221,124 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  placeholderText: {
-    fontSize: 80,
-  },
   content: {
-    padding: 20,
+    padding: Spacing.lg,
+    paddingBottom: 100,
+  },
+  categoryContainer: {
+    alignSelf: 'flex-start',
+    backgroundColor: Colors.light.backgroundTertiary,
+    paddingHorizontal: Spacing.sm + 4,
+    paddingVertical: Spacing.xs + 2,
+    borderRadius: BorderRadius.sm,
+    marginBottom: Spacing.sm,
   },
   category: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
+    fontSize: Typography.xs,
+    color: Colors.light.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 1,
+    fontWeight: Typography.medium,
   },
   productName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
+    fontSize: Typography.xxl,
+    fontWeight: Typography.bold,
+    color: Colors.light.text,
+    marginBottom: Spacing.sm,
+    lineHeight: 30,
   },
   price: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#007AFF',
-    marginBottom: 20,
+    fontSize: Typography.xxl,
+    fontWeight: Typography.bold,
+    color: Colors.light.primary,
+    marginBottom: Spacing.lg,
   },
   descriptionContainer: {
-    marginTop: 10,
+    marginTop: Spacing.md,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 10,
+    fontSize: Typography.lg,
+    fontWeight: Typography.semibold,
+    color: Colors.light.text,
+    marginBottom: Spacing.sm,
   },
   description: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: Typography.md,
+    color: Colors.light.textSecondary,
     lineHeight: 24,
   },
   stockContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: Spacing.lg,
+    padding: Spacing.md,
+    backgroundColor: Colors.light.backgroundTertiary,
+    borderRadius: BorderRadius.md,
   },
   stockIndicator: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    marginRight: 8,
+    marginRight: Spacing.sm,
   },
   inStock: {
-    backgroundColor: '#4caf50',
+    backgroundColor: Colors.light.success,
   },
   outOfStock: {
-    backgroundColor: '#f44336',
+    backgroundColor: Colors.light.error,
   },
   stockText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: Typography.sm,
+    fontWeight: Typography.medium,
   },
   inStockText: {
-    color: '#4caf50',
+    color: Colors.light.success,
   },
   outOfStockText: {
-    color: '#f44336',
+    color: Colors.light.error,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    padding: Spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    backgroundColor: '#fff',
+    borderTopColor: Colors.light.borderLight,
+    backgroundColor: Colors.light.surface,
+    ...Shadows.md,
   },
   priceContainer: {
     flex: 1,
   },
+  footerPriceLabel: {
+    fontSize: Typography.xs,
+    color: Colors.light.textSecondary,
+    marginBottom: 2,
+  },
   footerPrice: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.xl,
+    fontWeight: Typography.bold,
+    color: Colors.light.text,
   },
   addToCartButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 8,
-    minWidth: 150,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm + 6,
+    borderRadius: BorderRadius.md,
+    minWidth: 160,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   addToCartButtonDisabled: {
-    backgroundColor: '#b3d4fc',
+    opacity: 0.6,
+  },
+  cartIcon: {
+    marginRight: Spacing.sm,
   },
   addToCartText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
 });
 

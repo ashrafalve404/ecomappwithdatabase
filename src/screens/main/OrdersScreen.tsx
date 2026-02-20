@@ -11,6 +11,7 @@ import {
 import { useRouter, useFocusEffect } from 'expo-router';
 import { ordersAPI } from '../../api';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors, Spacing, BorderRadius, Typography, Shadows } from '../../../constants/theme';
 
 interface Order {
   id: number;
@@ -58,17 +59,17 @@ const OrdersScreen: React.FC = () => {
     const statusLower = status.toLowerCase();
     switch (statusLower) {
       case 'completed':
-        return '#4caf50';
+        return Colors.light.success;
       case 'processing':
-        return '#2196f3';
+        return Colors.light.info;
       case 'shipped':
-        return '#9c27b0';
+        return '#9C27B0';
       case 'pending':
-        return '#ff9800';
+        return Colors.light.warning;
       case 'cancelled':
-        return '#f44336';
+        return Colors.light.error;
       default:
-        return '#666';
+        return Colors.light.textSecondary;
     }
   };
 
@@ -124,7 +125,7 @@ const OrdersScreen: React.FC = () => {
   if (isLoading && !isRefreshing) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={Colors.light.primary} />
       </View>
     );
   }
@@ -132,6 +133,7 @@ const OrdersScreen: React.FC = () => {
   if (error && !orders.length) {
     return (
       <View style={styles.errorContainer}>
+        <Ionicons name="alert-circle-outline" size={48} color={Colors.light.error} />
         <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity
           style={styles.retryButton}
@@ -151,7 +153,9 @@ const OrdersScreen: React.FC = () => {
 
       {orders.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyIcon}><Ionicons name="cube-outline" size={60} color="#ccc" /></Text>
+          <View style={styles.emptyIconContainer}>
+            <Ionicons name="receipt-outline" size={64} color={Colors.light.iconSecondary} />
+          </View>
           <Text style={styles.emptyTitle}>No orders yet</Text>
           <Text style={styles.emptyText}>
             When you place an order, it will appear here
@@ -173,7 +177,8 @@ const OrdersScreen: React.FC = () => {
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={() => fetchOrders(true)}
-              colors={['#007AFF']}
+              colors={[Colors.light.primary]}
+              tintColor={Colors.light.primary}
             />
           }
         />
@@ -185,7 +190,7 @@ const OrdersScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.light.background,
   },
   loadingContainer: {
     flex: 1,
@@ -196,150 +201,152 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: Spacing.xl,
   },
   errorText: {
-    color: '#c62828',
-    fontSize: 16,
+    color: Colors.light.error,
+    fontSize: Typography.md,
     textAlign: 'center',
-    marginBottom: 15,
+    marginTop: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   retryButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm + 2,
+    borderRadius: BorderRadius.md,
   },
   retryText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: '#fff',
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    backgroundColor: Colors.light.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: Colors.light.borderLight,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.xl,
+    fontWeight: Typography.bold,
+    color: Colors.light.text,
   },
   listContent: {
-    padding: 15,
-    paddingBottom: 20,
+    padding: Spacing.md,
+    paddingBottom: Spacing.xl,
   },
   orderCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    marginBottom: Spacing.md,
+    ...Shadows.sm,
   },
   orderHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 15,
+    marginBottom: Spacing.md,
   },
   orderNumber: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
+    color: Colors.light.text,
   },
   orderDate: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 4,
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
+    marginTop: 2,
   },
   statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: Spacing.sm + 4,
+    paddingVertical: Spacing.xs + 2,
+    borderRadius: BorderRadius.full,
   },
   statusText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.xs,
+    fontWeight: Typography.semibold,
   },
   orderDetails: {
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
-    paddingTop: 12,
-    marginBottom: 12,
+    borderTopColor: Colors.light.borderLight,
+    paddingTop: Spacing.sm + 4,
+    marginBottom: Spacing.sm + 4,
   },
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: Spacing.xs + 2,
   },
   detailLabel: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
   },
   detailValue: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '500',
+    fontSize: Typography.sm,
+    color: Colors.light.text,
+    fontWeight: Typography.medium,
     flex: 1,
     textAlign: 'right',
-    marginLeft: 10,
+    marginLeft: Spacing.sm,
   },
   orderFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
-    paddingTop: 12,
+    borderTopColor: Colors.light.borderLight,
+    paddingTop: Spacing.sm + 4,
   },
   totalLabel: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
   },
   totalValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#007AFF',
+    fontSize: Typography.lg,
+    fontWeight: Typography.bold,
+    color: Colors.light.primary,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: Spacing.xl,
   },
-  emptyIcon: {
-    fontSize: 60,
-    marginBottom: 20,
+  emptyIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: BorderRadius.full,
+    backgroundColor: Colors.light.backgroundTertiary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.lg,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
+    fontSize: Typography.lg,
+    fontWeight: Typography.semibold,
+    color: Colors.light.text,
+    marginBottom: Spacing.sm,
   },
   emptyText: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: Typography.md,
+    color: Colors.light.textSecondary,
     textAlign: 'center',
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
   shopButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm + 6,
+    borderRadius: BorderRadius.md,
   },
   shopButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
 });
 

@@ -89,6 +89,16 @@ export const productsAPI = {
     const response = await api.get(`products/${id}/`);
     return response.data;
   },
+  
+  searchProducts: async (query: string) => {
+    const response = await api.get(`products/?search=${encodeURIComponent(query)}`);
+    return response.data;
+  },
+  
+  getProductsByCategory: async (categoryId: number) => {
+    const response = await api.get(`products/?category=${categoryId}`);
+    return response.data;
+  },
 };
 
 // Categories API calls

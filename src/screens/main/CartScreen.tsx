@@ -14,6 +14,7 @@ import { useFocusEffect } from 'expo-router';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { cartAPI } from '../../api';
+import { Colors, Spacing, BorderRadius, Typography, Shadows } from '../../../constants/theme';
 
 interface CartItem {
   id: number;
@@ -105,7 +106,7 @@ const CartScreen: React.FC = () => {
           />
         ) : (
           <View style={styles.placeholderImage}>
-            <Ionicons name="cube-outline" size={30} color="#999" />
+            <Ionicons name="image-outline" size={24} color={Colors.light.iconSecondary} />
           </View>
         )}
       </TouchableOpacity>
@@ -128,7 +129,7 @@ const CartScreen: React.FC = () => {
           disabled={isRemoving === item.id}
         >
           {isRemoving === item.id ? (
-            <ActivityIndicator size="small" color="#fff" />
+            <ActivityIndicator size="small" color={Colors.light.textInverse} />
           ) : (
             <Text style={styles.removeButtonText}>Remove</Text>
           )}
@@ -140,7 +141,7 @@ const CartScreen: React.FC = () => {
   if (isLoading && !isRefreshing) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={Colors.light.primary} />
       </View>
     );
   }
@@ -148,6 +149,7 @@ const CartScreen: React.FC = () => {
   if (error && !cartItems.length) {
     return (
       <View style={styles.errorContainer}>
+        <Ionicons name="alert-circle-outline" size={48} color={Colors.light.error} />
         <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity style={styles.retryButton} onPress={() => fetchCart()}>
           <Text style={styles.retryText}>Retry</Text>
@@ -161,13 +163,15 @@ const CartScreen: React.FC = () => {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>My Cart</Text>
         {cartItems.length > 0 && (
-          <Text style={styles.itemCount}>{cartItems.length} items</Text>
+          <Text style={styles.itemCount}>{cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}</Text>
         )}
       </View>
 
       {cartItems.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyIcon}><Ionicons name="cart-outline" size={60} color="#ccc" /></Text>
+          <View style={styles.emptyIconContainer}>
+            <Ionicons name="cart-outline" size={64} color={Colors.light.iconSecondary} />
+          </View>
           <Text style={styles.emptyTitle}>Your cart is empty</Text>
           <Text style={styles.emptyText}>
             Looks like you haven't added anything yet
@@ -190,7 +194,8 @@ const CartScreen: React.FC = () => {
               <RefreshControl
                 refreshing={isRefreshing}
                 onRefresh={() => fetchCart(true)}
-                colors={['#007AFF']}
+                colors={[Colors.light.primary]}
+                tintColor={Colors.light.primary}
               />
             }
           />
@@ -205,6 +210,7 @@ const CartScreen: React.FC = () => {
               onPress={() => router.push('/checkout')}
             >
               <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
+              <Ionicons name="arrow-forward" size={18} color={Colors.light.textInverse} />
             </TouchableOpacity>
           </View>
         </>
@@ -216,7 +222,7 @@ const CartScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.light.background,
   },
   loadingContainer: {
     flex: 1,
@@ -227,66 +233,63 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: Spacing.xl,
   },
   errorText: {
-    color: '#c62828',
-    fontSize: 16,
+    color: Colors.light.error,
+    fontSize: Typography.md,
     textAlign: 'center',
-    marginBottom: 15,
+    marginTop: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   retryButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm + 2,
+    borderRadius: BorderRadius.md,
   },
   retryText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: '#fff',
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    backgroundColor: Colors.light.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: Colors.light.borderLight,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.xl,
+    fontWeight: Typography.bold,
+    color: Colors.light.text,
   },
   itemCount: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
   },
   listContent: {
-    padding: 15,
-    paddingBottom: 100,
+    padding: Spacing.md,
+    paddingBottom: 140,
   },
   cartItem: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    marginBottom: Spacing.md,
+    ...Shadows.sm,
   },
   productImageContainer: {
     width: 80,
     height: 80,
-    borderRadius: 8,
+    borderRadius: BorderRadius.md,
     overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: Colors.light.backgroundTertiary,
   },
   productImage: {
     width: '100%',
@@ -299,124 +302,133 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  placeholderText: {
-    fontSize: 30,
-  },
   itemDetails: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: Spacing.md,
     justifyContent: 'space-between',
   },
   productName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
+    fontSize: Typography.sm,
+    fontWeight: Typography.medium,
+    color: Colors.light.text,
+    marginBottom: Spacing.xs,
   },
   productPrice: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
   },
   quantityRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   quantityText: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: Typography.sm,
+    color: Colors.light.textSecondary,
   },
   itemActions: {
     alignItems: 'flex-end',
     justifyContent: 'space-between',
   },
   subtotal: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
+    color: Colors.light.text,
   },
   removeButton: {
-    backgroundColor: '#ff5252',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    marginTop: 8,
+    backgroundColor: Colors.light.error,
+    paddingHorizontal: Spacing.sm + 4,
+    paddingVertical: Spacing.xs + 2,
+    borderRadius: BorderRadius.sm,
+    marginTop: Spacing.sm,
   },
   removeButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.xs,
+    fontWeight: Typography.semibold,
   },
   buttonDisabled: {
-    backgroundColor: '#ffab91',
+    opacity: 0.6,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: Spacing.xl,
   },
-  emptyIcon: {
-    fontSize: 60,
-    marginBottom: 20,
+  emptyIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: BorderRadius.full,
+    backgroundColor: Colors.light.backgroundTertiary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.lg,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
+    fontSize: Typography.lg,
+    fontWeight: Typography.semibold,
+    color: Colors.light.text,
+    marginBottom: Spacing.sm,
   },
   emptyText: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: Typography.md,
+    color: Colors.light.textSecondary,
     textAlign: 'center',
-    marginBottom: 25,
+    marginBottom: Spacing.xl,
   },
   shopButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.sm + 6,
+    borderRadius: BorderRadius.md,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   shopButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
+    marginRight: Spacing.sm,
   },
   footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#fff',
-    padding: 20,
+    backgroundColor: Colors.light.surface,
+    padding: Spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: Colors.light.borderLight,
+    ...Shadows.md,
   },
   totalContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: Spacing.md,
   },
   totalLabel: {
-    fontSize: 18,
-    color: '#333',
+    fontSize: Typography.lg,
+    color: Colors.light.textSecondary,
   },
   totalPrice: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: Typography.xxl,
+    fontWeight: Typography.bold,
+    color: Colors.light.text,
   },
   checkoutButton: {
-    backgroundColor: '#007AFF',
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: Colors.light.primary,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   checkoutButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
+    marginRight: Spacing.sm,
   },
 });
 

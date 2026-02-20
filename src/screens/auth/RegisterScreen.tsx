@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors, Spacing, BorderRadius, Typography, Shadows } from '../../../constants/theme';
 
 const RegisterScreen: React.FC = () => {
   const router = useRouter();
@@ -22,6 +24,8 @@ const RegisterScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { register, isLoading, error, clearError } = useAuth();
 
   const handleRegister = async () => {
@@ -74,9 +78,10 @@ const RegisterScreen: React.FC = () => {
         <View style={styles.form}>
           {error && (
             <View style={styles.errorContainer}>
+              <Ionicons name="alert-circle" size={18} color={Colors.light.error} />
               <Text style={styles.errorText}>{error}</Text>
               <TouchableOpacity onPress={clearError}>
-                <Text style={styles.dismissText}>✕</Text>
+                <Ionicons name="close" size={18} color={Colors.light.error} />
               </TouchableOpacity>
             </View>
           )}
@@ -89,7 +94,7 @@ const RegisterScreen: React.FC = () => {
                 value={firstName}
                 onChangeText={setFirstName}
                 placeholder="First name"
-                placeholderTextColor="#999"
+                placeholderTextColor={Colors.light.placeholder}
                 autoCapitalize="words"
               />
             </View>
@@ -101,7 +106,7 @@ const RegisterScreen: React.FC = () => {
                 value={lastName}
                 onChangeText={setLastName}
                 placeholder="Last name"
-                placeholderTextColor="#999"
+                placeholderTextColor={Colors.light.placeholder}
                 autoCapitalize="words"
               />
             </View>
@@ -109,53 +114,85 @@ const RegisterScreen: React.FC = () => {
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Username *</Text>
-            <TextInput
-              style={styles.input}
-              value={username}
-              onChangeText={setUsername}
-              placeholder="Enter your username"
-              placeholderTextColor="#999"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+            <View style={styles.inputWrapper}>
+              <Ionicons name="person-outline" size={18} color={Colors.light.iconSecondary} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={username}
+                onChangeText={setUsername}
+                placeholder="Enter your username"
+                placeholderTextColor={Colors.light.placeholder}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email *</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              placeholderTextColor="#999"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+            <View style={styles.inputWrapper}>
+              <Ionicons name="mail-outline" size={18} color={Colors.light.iconSecondary} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Enter your email"
+                placeholderTextColor={Colors.light.placeholder}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Password *</Text>
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Create a password"
-              placeholderTextColor="#999"
-              secureTextEntry
-            />
+            <View style={styles.inputWrapper}>
+              <Ionicons name="lock-closed-outline" size={18} color={Colors.light.iconSecondary} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Create a password"
+                placeholderTextColor={Colors.light.placeholder}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeButton}
+              >
+                <Ionicons
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={18}
+                  color={Colors.light.iconSecondary}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Confirm Password *</Text>
-            <TextInput
-              style={styles.input}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder="Confirm your password"
-              placeholderTextColor="#999"
-              secureTextEntry
-            />
+            <View style={styles.inputWrapper}>
+              <Ionicons name="lock-closed-outline" size={18} color={Colors.light.iconSecondary} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                placeholder="Confirm your password"
+                placeholderTextColor={Colors.light.placeholder}
+                secureTextEntry={!showConfirmPassword}
+              />
+              <TouchableOpacity
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={styles.eyeButton}
+              >
+                <Ionicons
+                  name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={18}
+                  color={Colors.light.iconSecondary}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <TouchableOpacity
@@ -164,7 +201,7 @@ const RegisterScreen: React.FC = () => {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={Colors.light.textInverse} />
             ) : (
               <Text style={styles.buttonText}>Create Account</Text>
             )}
@@ -185,47 +222,43 @@ const RegisterScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.background,
   },
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: Spacing.xl,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: Spacing.xl,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
+    fontSize: Typography.xxl,
+    fontWeight: Typography.bold,
+    color: Colors.light.text,
+    marginBottom: Spacing.xs,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: Typography.md,
+    color: Colors.light.textSecondary,
   },
   form: {
     width: '100%',
   },
   errorContainer: {
-    backgroundColor: '#ffebee',
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: `${Colors.light.error}15`,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
   errorText: {
-    color: '#c62828',
+    color: Colors.light.error,
     flex: 1,
-  },
-  dismissText: {
-    color: '#c62828',
-    fontSize: 18,
-    marginLeft: 10,
+    marginLeft: Spacing.sm,
+    fontSize: Typography.sm,
   },
   row: {
     flexDirection: 'row',
@@ -235,51 +268,64 @@ const styles = StyleSheet.create({
     width: '48%',
   },
   inputContainer: {
-    marginBottom: 16,
+    marginBottom: Spacing.md,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
+    fontSize: Typography.sm,
+    fontWeight: Typography.medium,
+    color: Colors.light.text,
+    marginBottom: Spacing.sm,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+  },
+  inputIcon: {
+    paddingHorizontal: Spacing.md,
   },
   input: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    padding: 15,
-    fontSize: 16,
-    color: '#333',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
+    flex: 1,
+    paddingVertical: Spacing.sm + 4,
+    paddingRight: Spacing.md,
+    fontSize: Typography.md,
+    color: Colors.light.text,
+  },
+  eyeButton: {
+    padding: Spacing.md,
   },
   button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 16,
+    backgroundColor: Colors.light.primary,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.md,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: Spacing.sm,
+    ...Shadows.sm,
   },
   buttonDisabled: {
-    backgroundColor: '#b3d4fc',
+    opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.light.textInverse,
+    fontSize: Typography.md,
+    fontWeight: Typography.semibold,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: Spacing.xl,
   },
   footerText: {
-    color: '#666',
-    fontSize: 14,
+    color: Colors.light.textSecondary,
+    fontSize: Typography.sm,
   },
   linkText: {
-    color: '#007AFF',
-    fontSize: 14,
-    fontWeight: '600',
+    color: Colors.light.primary,
+    fontSize: Typography.sm,
+    fontWeight: Typography.semibold,
   },
 });
 
